@@ -1,32 +1,17 @@
-# Prerequisites
-*.d
+# Folders
+.vs/
+ButchersToolbox.tlog/
+TestingClient.tlog/
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
+# Build Intermediary
+*.recipe
+*.CppClean.log
+
+# Intermediary
 *.obj
+*.pdb
+*.idb
+*.ilk
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
+# Output
 *.out
-*.app
