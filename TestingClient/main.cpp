@@ -5,7 +5,8 @@
 
 // Mine
 #include <ButchersToolbox\Console.hpp>
-#include <ButchersToolbox\utf_string.hpp>
+#include <ButchersToolbox\utf8_string.hpp>
+#include <ButchersToolbox\Arrays.hpp>
 
 
 namespace utf8string_tests {
@@ -147,12 +148,38 @@ namespace utf8string_tests {
 		}
 	}
 
+	void testSearch()
+	{
+		// Contains
+		{
+			utf8string str = u8"ăĂîșț";
+
+			if (str.contains(u8"îș") == false ||
+				str.contains(u8"Ăîș") == false ||
+				str.contains(u8"ăĂîșț") == false)
+			{
+				throw std::exception();
+			}
+		}
+
+		// find
+		{
+			utf8string str = u8"ăĂîșț";
+			auto iter = str.find(u8"îș");
+
+			if (iter.byte_index != 4 || iter.get() != u8"î") {
+				throw std::exception();
+			}
+		}
+	}
+
 	void testEverything()
 	{
 		testInsertAfter();
 		testPushAndPrepend();
 		testErase();
 		testForLoop();
+		testSearch();
 	}
 }
 
@@ -163,6 +190,6 @@ int main()
 
 	utf8string_tests::testEverything();
 
-	utf8string str = u8"Ok";
+	utf8string str = u8"Cârnați cu mămăliguță";
 	printf("%s \n", str.c_str());
 }
