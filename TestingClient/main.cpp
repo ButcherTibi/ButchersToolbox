@@ -146,6 +146,17 @@ namespace utf8string_tests {
 				throw std::exception();
 			}
 		}
+
+		// Erase Symbols
+		{
+			utf8string str = u8"ăĂîșț";
+
+			str.erase(u8"Ăîș");
+
+			if (str != u8"ăț") {
+				throw std::exception();
+			}
+		}
 	}
 
 	void testSearch()
