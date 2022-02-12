@@ -1,5 +1,5 @@
-## ButchersToolbox
-A toolbox of stuff that I use in my projects.
+# ButchersToolbox
+A personal toolbox of stuff that I use in my projects.
 
 ### Table of Contents
 1. [`utf8_string` library](#utf8_string)
@@ -7,12 +7,13 @@ A toolbox of stuff that I use in my projects.
 3. [`Filesys` for reading files and handling filesystem paths](#filesys)
 
 ### Requirements
-Visual Studio 2022 with C++ 20 standard.
+Visual Studio 2022 with C++20 standard.
 
-### utf8_string
-A C++20 utf-8 string library similar to `System.String` from C#.
-**Almost feature complete**.
-[link](./ButchersToolbox/Source Code/ButchersToolbox/utf8_string/README.md)
+---
+
+### [utf8_string](./ButchersToolbox/Source%20Code/ButchersToolbox/utf8_string/README.md)
+UTF-8 string library similar to `System.String` from C#.
+**Almost feature complete.**
 
 ### Console
 Ever wandered how to print to console colored text ?

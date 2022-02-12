@@ -77,12 +77,10 @@ printf("%s \n", str.c_str());
 utf8_string str = u8"La Vatra au niște șnițele bune\n";
 		
 for (auto iter = str.begin(); iter != str.after(); iter++) {
-	
 	printf("%s", iter.get().c_str());  // not very efficient
 }
 
 for (auto iter = str.last(); iter != str.before(); iter--) {
-
 	printf("%s", iter.get().c_str());  // not very efficient
 }
 ```
