@@ -84,4 +84,3 @@ for (auto iter = str.last(); iter != str.before(); iter--) {
 	printf("%s", iter.get().c_str());  // not very efficient
 }
 ```
- 
