@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Precompiled Headers">
-      <UniqueIdentifier>{6d79ef54-ef11-4c85-99f9-8f4ad277ee11}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Filesystem">
       <UniqueIdentifier>{90532d5f-794d-4ac6-899d-521ce1d388f7}</UniqueIdentifier>
     </Filter>
@@ -19,14 +16,8 @@
     <Filter Include="utf8_string">
       <UniqueIdentifier>{5ba3f2d3-b71e-48de-8695-64020b33ed09}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Containers">
-      <UniqueIdentifier>{3df10a9f-e76c-436e-8756-8fbb7f410df1}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.hpp">
-      <Filter>Precompiled Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\ButchersToolbox\Console.hpp">
       <Filter>Console</Filter>
     </ClInclude>
@@ -36,34 +27,25 @@
     <ClInclude Include="Source Code\ButchersToolbox\Filesys.hpp">
       <Filter>Filesystem</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ButchersToolbox\utf8_string.hpp">
+    <ClInclude Include="Source Code\ButchersToolbox\utf8_string\utf8_string.hpp">
       <Filter>utf8_string</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\ButchersToolbox\WindowsSpecific.hpp">
       <Filter>Windows Specific</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ButchersToolbox\Arrays.hpp">
-      <Filter>Containers</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp">
-      <Filter>Precompiled Headers</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\ButchersToolbox\Filesys.cpp">
       <Filter>Filesystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ButchersToolbox\utf8_string.cpp">
+    <ClCompile Include="Source Code\ButchersToolbox\utf8_string\utf8_string.cpp">
       <Filter>utf8_string</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\ButchersToolbox\WindowsSpecific.cpp">
       <Filter>Windows Specific</Filter>
     </ClCompile>
-    <ClCompile Include="Console.cpp">
+    <ClCompile Include="Source Code\ButchersToolbox\Console.cpp">
       <Filter>Console</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\ButchersToolbox\Arrays.cpp">
-      <Filter>Containers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
