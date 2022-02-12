@@ -15,7 +15,7 @@ utf8_string str_from_std = std_str;
 printf("%s \n", str_from_std.c_str());
 
 std::vector<uint8_t> bytes = {
-	'B', 'y', 't', 'e', 's'
+    'B', 'y', 't', 'e', 's'
 };
 utf8_string str_bytes = bytes;	
 printf("%s \n", str_bytes.c_str());
@@ -27,12 +27,12 @@ utf8_string str = u8"Cârnați";
 
 // access character
 printf("%s %s %s \n",
-	str[0].c_str(), str[1].c_str(), str[6].c_str()
+    str[0].c_str(), str[1].c_str(), str[6].c_str()
 );
 
 // access by byte index
 printf("%s %s %s \n",
-	str.at(0).c_str(), str.at(1).c_str(), str.at(8).c_str()
+    str.at(0).c_str(), str.at(1).c_str(), str.at(8).c_str()
 );
 ```
 
@@ -42,7 +42,7 @@ utf8_string soup = u8"Supă";
 utf8_string mayo = u8"Maioneză";
 
 if (soup != mayo) {
-	printf("strings are not equal \n");
+    printf("strings are not equal \n");
 }
 ```
 
@@ -75,12 +75,12 @@ printf("%s \n", str.c_str());
 ### Example 6 Iteration
 ```C++
 utf8_string str = u8"La Vatra au niște șnițele bune\n";
-		
+        
 for (auto iter = str.begin(); iter != str.after(); iter++) {
-	printf("%s", iter.get().c_str());  // not very efficient
+    printf("%s", iter.get().c_str());  // not very efficient
 }
 
 for (auto iter = str.last(); iter != str.before(); iter--) {
-	printf("%s", iter.get().c_str());  // not very efficient
+    printf("%s", iter.get().c_str());  // not very efficient
 }
 ```
