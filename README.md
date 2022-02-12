@@ -11,7 +11,7 @@ Visual Studio 2022 with C++ 20 standard.
 
 ### utf8_string
 A C++20 utf-8 string library similar to `System.String` from C#.
-**Almost feature complete**
+**Almost feature complete**.
 [link](./ButchersToolbox/Source Code/ButchersToolbox/utf8_string/README.md)
 
 ### Console
