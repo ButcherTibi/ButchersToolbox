@@ -11,7 +11,11 @@ namespace Console {
 
 	void configureForUTF8()
 	{
-		// Set output mode to handle virtual terminal sequences
+		SetConsoleOutputCP(CP_UTF8);
+	}
+
+	void enableVirtualProcessing()
+	{
 		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
 		DWORD dwMode = 0;
@@ -19,9 +23,6 @@ namespace Console {
 
 		dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 		SetConsoleMode(handle, dwMode);
-
-		// Set Console Output to UTF-8
-		SetConsoleOutputCP(CP_UTF8);
 	}
 
 	void setForegroundColor(uint8_t red, uint8_t green, uint8_t blue)

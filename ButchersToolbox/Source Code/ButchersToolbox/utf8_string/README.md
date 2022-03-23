@@ -17,7 +17,7 @@ printf("%s \n", str_from_std.c_str());
 std::vector<uint8_t> bytes = {
     'B', 'y', 't', 'e', 's'
 };
-utf8_string str_bytes = bytes;	
+utf8_string str_bytes = bytes;
 printf("%s \n", str_bytes.c_str());
 ```
 
@@ -75,7 +75,7 @@ printf("%s \n", str.c_str());
 ### Example 6 Iteration
 ```C++
 utf8_string str = u8"La Vatra au niște șnițele bune\n";
-        
+
 for (auto iter = str.begin(); iter != str.after(); iter++) {
     printf("%s", iter.get().c_str());  // not very efficient
 }

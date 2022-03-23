@@ -2,8 +2,10 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Tests\JSON.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Examples\utf8_string.hpp" />
+    <ClInclude Include="Tests\JSON.hpp" />
   </ItemGroup>
 </Project>

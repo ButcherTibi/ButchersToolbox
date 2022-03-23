@@ -1,13 +1,18 @@
-﻿
-// Standard
+﻿// Standard
 #include <stdio.h>
 #include <array>
 
 
 // Mine
-#include "ButchersToolbox\Console.hpp"
+#include "ButchersToolbox\Console\Console.hpp"
 #include "ButchersToolbox\utf8_string\utf8_string.hpp"
+#include "ButchersToolbox\Pointer\Pointers.hpp"
+#include "ButchersToolbox/SparseVector.hpp"
+#include "ButchersToolbox/Filesys/Filesys.hpp"
+
 #include "Examples\utf8_string.hpp"
+
+#include "Tests/JSON.hpp"
 
 
 namespace utf8_string_tests {
@@ -214,14 +219,81 @@ namespace utf8_string_tests {
 }
 
 
+namespace Filesys_tests {
+
+	void test()
+	{
+		std::string exe_path;
+		filesys::getExecutablePath(exe_path);
+
+		filesys::Path path(exe_path);
+		path.pop(3);
+
+		path.append("/TestingClient/Tests/test.json");
+
+		std::string path_to_json = path.toString();
+		std::vector<uint8_t> bytes;
+		filesys::readFile(path_to_json, bytes);
+	}
+}
+
+
+namespace Pointer_tests {
+
+	struct TestObject {
+		uint32_t member_0;
+	};
+
+	void test()
+	{
+		std::vector<TestObject> vec;
+		TestObject& obj = vec.emplace_back();
+		obj.member_0 = 1;
+
+		vector_ptr ptr(vec, 0);
+		ptr->member_0 = 2;
+
+		if (ptr->member_0 != 2) {
+			throw std::exception();
+		}
+	}
+}
+
+
+namespace DefferedVector_tests {
+
+	void test()
+	{
+		SparseVector<uint32_t> vec;
+		vec.resize(4);
+		vec[0] = 0;
+		vec[1] = 1;
+		vec[2] = 2;
+		vec[3] = 3;
+
+		for (auto i = vec.begin(); i != vec.after(); i++) {		
+			printf("%d, ", i.get());
+		}
+		printf("\n");
+
+		vec.erase(2);
+
+		for (auto i = vec.begin(); i != vec.after(); i++) {
+			printf("%d, ", i.get());
+		}
+		printf("\n");
+	}
+}
+
+
 int main()
 {
-	// setting utf-8 source code and execution is also required
-	// via compiler option '/utf-8'
-	Console::configureForUTF8();
-
 	// Test utf8_string
 	{
+		// setting utf-8 source code and execution is also required
+		// via compiler option '/utf-8'
+		Console::configureForUTF8();
+
 		printf("\nExample 1 Creating a string \n");
 		utf8string_examples::example_1_Creating_a_string();
 		printf("\nExample 2 Acessing a character \n");
@@ -241,6 +313,26 @@ int main()
 		utf8_string_tests::testForLoop();
 		utf8_string_tests::testSearch();
 		utf8_string_tests::testJoin();
+	}
+
+	// Filesys
+	{
+		Filesys_tests::test();
+	}
+
+	// Pointers
+	{
+		Pointer_tests::test();
+	}
+
+	// Deffered Vector
+	{
+		DefferedVector_tests::test();
+	}
+
+	// JSON
+	{
+		JSON_tests::test();
 	}
 
 	printf("\nTests have been run \n");

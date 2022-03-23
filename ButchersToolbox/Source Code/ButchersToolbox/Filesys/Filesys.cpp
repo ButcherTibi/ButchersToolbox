@@ -13,29 +13,38 @@
 #include <cstdio>
 
 // Mine
-#include "DebugUtils.hpp"
-#include "WindowsSpecific.hpp"
+#include "Filesys.hpp"
+#include "../Windows/WindowsSpecific.hpp"
 
 
 using namespace filesys;
 
 
-uint32_t filesys::max_path_length = 2024;
+const uint32_t max_path_length = 1024;
+
+#define code_location \
+	("ln = " + std::to_string(__LINE__) + \
+	" fn = " + __func__ + \
+	" in file " + __FILE__).c_str()
 
 
-void filesys::readFile(std::string& absolute_path, std::vector<uint8_t>& r_bytes)
+void filesys::getExecutablePath(std::string& exe_path)
 {
-	std::wstring filename_win;
-	filename_win.resize(absolute_path.size() * 2);
+	exe_path.resize(max_path_length);
 
-	size_t unused;
+	uint32_t used_size = GetModuleFileName(NULL, exe_path.data(), exe_path.size());
 
-	mbstowcs_s(
-		&unused,
-		filename_win.data(), filename_win.size(),
-		absolute_path.data(), absolute_path.size() * 2);
+	exe_path.resize(used_size);
+	exe_path.shrink_to_fit();
+}
 
-	win32::Handle file_handle = CreateFile(filename_win.c_str(),
+void filesys::readFile(std::string& path, std::vector<uint8_t>& r_bytes)
+{
+	if (path.empty()) {
+		return;
+	}
+
+	win32::Handle file_handle = CreateFile(path.c_str(),
 		GENERIC_READ, // desired acces
 		0,  // share mode
 		NULL,  // security atributes
@@ -48,7 +57,7 @@ void filesys::readFile(std::string& absolute_path, std::vector<uint8_t>& r_bytes
 
 		printf("%s failed to a create file handle for path = %s \n",
 			code_location,
-			absolute_path.c_str());
+			path.c_str());
 		__debugbreak();
 	}
 
@@ -58,7 +67,7 @@ void filesys::readFile(std::string& absolute_path, std::vector<uint8_t>& r_bytes
 
 		printf("%s failed to find file size for path = %s \n",
 			code_location,
-			absolute_path.c_str());
+			path.c_str());
 		__debugbreak();
 	}
 	r_bytes.resize(file_size.QuadPart);
@@ -77,103 +86,79 @@ void filesys::readFile(std::string& absolute_path, std::vector<uint8_t>& r_bytes
 	{
 		printf("%s failed to read file for path =  %s \n",
 			code_location,
-			absolute_path.c_str());
+			path.c_str());
 		__debugbreak();
 	}
 }
 
-//static uint32_t findEntryCount(std::string path)
-//{
-//	size_t last = path.size() - 1;
-//	uint32_t entry_count = 0;
-//	bool was_something = false;
-//
-//	for (size_t i = 0; i < path.size(); i++) {
-//
-//		if (i == last &&
-//			(path[i] != '\\' && path[i] != '/'))
-//		{
-//			// path = "e" or path = "entry"
-//			entry_count++;
-//		}
-//		else if (path[i] == '\\' || path[i] == '/') {
-//
-//			// path = "entry\"
-//			if (was_something) {
-//
-//				entry_count++;
-//				was_something = false;
-//			}
-//			// path = "\\\\\"
-//		}
-//		else {
-//			was_something = true;
-//		}
-//	}
-//	return entry_count;
-//}
-//
-//static void pushPathToEntries(std::vector<std::string>& existing, std::string& path)
-//{
-//	existing.reserve(existing.size() + findEntryCount(path));
-//
-//	size_t last = path.size() - 1;
-//	std::string entry;
-//	bool was_something = false;
-//
-//	for (uint32_t i = 0; i < path.size(); i++) {
-//
-//		if (i == last &&
-//			(path[i] != '\\' && path[i] != '/'))
-//		{
-//			// path = "e" or path = "entry"
-//			entry.push_back(path[i]);
-//			existing.push_back(entry);
-//		}
-//		else if (path[i] == '\\' || path[i] == '/') {
-//
-//			// path = "entry\"
-//			if (was_something) {
-//
-//				existing.push_back(entry);
-//				entry.clear();
-//				was_something = false;
-//			}
-//			// path = "\\\\\"
-//		}
-//		else {
-//			was_something = true;
-//			entry.push_back(path[i]);
-//		}
-//	}
-//}
-//
-//Path::Path(std::string path)
-//{
-//	entries.clear();
-//	pushPathToEntries(this->entries, path);
-//}
-//
-//Path::Path(std::string& path)
-//{
-//	entries.clear();
-//	pushPathToEntries(this->entries, path);
-//}
-//
-//ErrStack Path::recreateFromRelativePath(std::string path)
-//{
-//	ErrStack err_stack;
-//
-//	std::string solution_path;
-//	checkErrStack1(getSolutionPath(solution_path));
-//
-//	solution_path.append(path);
-//
-//	push_back(solution_path);
-//
-//	return ErrStack();
-//}
-//
+void Path::_pushPathToEntries(std::string& path)
+{
+	uint32_t i = 0;
+	std::string entry;
+
+	while (i < path.size()) {
+
+		char chara = path[i];
+
+		if (chara == '/' || chara == '\\') {
+
+			if (entry.empty() == false) {
+
+				entries.push_back(entry);
+				entry.clear();
+			}
+		}
+		else {
+			entry.push_back(chara);
+
+			if (i == path.size() - 1) {
+				entries.push_back(entry);
+			}
+		}
+
+		i++;
+	}
+}
+
+Path::Path(std::string path)
+{	
+	_pushPathToEntries(path);
+}
+
+void Path::append(std::string path)
+{
+	_pushPathToEntries(path);
+}
+
+void Path::pop(uint32_t count)
+{
+	for (uint32_t i = 0; i < count; i++) {
+		entries.pop_back();
+	}
+}
+
+std::string Path::toString()
+{
+	std::string path;
+	
+	if (this->entries.size()) {
+	
+		size_t last = entries.size() - 1;
+		for (size_t i = 0; i < entries.size(); i++) {
+	
+			for (char letter : entries[i]) {
+				path.push_back(letter);
+			}
+	
+			if (i != last) {
+				path.push_back('\\');
+			}
+		}
+	}
+	return path;
+}
+
+
 //bool Path::hasExtension(std::string extension)
 //{
 //	std::string last = entries.back();
@@ -182,41 +167,7 @@ void filesys::readFile(std::string& absolute_path, std::vector<uint8_t>& r_bytes
 //
 //	return extension == entry_ext;
 //}
-//
-//void Path::push_back(std::string path)
-//{
-//	pushPathToEntries(this->entries, path);
-//}
-//
-//void Path::pop_back(size_t count)
-//{
-//	for (size_t i = 0; i < count; i++) {
-//		entries.pop_back();
-//	}
-//}
-//
-//void Path::push_front(std::string path)
-//{
-//	std::vector<std::string> append = this->entries;
-//
-//	this->entries.clear();
-//	pushPathToEntries(this->entries, path);
-//
-//	for (std::string entry : append) {
-//		this->entries.push_back(entry);
-//	}
-//}
-//
-//void Path::pop_front(size_t count)
-//{
-//	this->entries.erase(entries.begin(), entries.begin() + count);
-//}
-//
-//void Path::erase(size_t start, size_t end)
-//{
-//	this->entries.erase(entries.begin() + start, entries.begin() + end);
-//}
-//
+
 //std::string Path::toWindowsPath()
 //{
 //	std::string path;

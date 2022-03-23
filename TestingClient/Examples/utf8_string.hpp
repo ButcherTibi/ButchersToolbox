@@ -85,5 +85,7 @@ namespace utf8string_examples {
 
 			printf("%s", iter.get().c_str());  // not very efficient
 		}
+
+		printf("\n");
 	}
 }

@@ -18,34 +18,42 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source Code\ButchersToolbox\Console.hpp">
+    <ClInclude Include="Source Code\ButchersToolbox\Console\Console.hpp">
       <Filter>Console</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\ButchersToolbox\DebugUtils.hpp">
       <Filter>DebugUtils</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ButchersToolbox\Filesys.hpp">
+    <ClInclude Include="Source Code\ButchersToolbox\Filesys\Filesys.hpp">
       <Filter>Filesystem</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\ButchersToolbox\utf8_string\utf8_string.hpp">
       <Filter>utf8_string</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ButchersToolbox\WindowsSpecific.hpp">
+    <ClInclude Include="Source Code\ButchersToolbox\Windows\WindowsSpecific.hpp">
       <Filter>Windows Specific</Filter>
     </ClInclude>
+    <ClInclude Include="Source Code\ButchersToolbox\Pointer\Pointers.hpp" />
+    <ClInclude Include="Source Code\ButchersToolbox\SparseVector.hpp" />
+    <ClInclude Include="Source Code\ButchersToolbox\JSON\JSON.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source Code\ButchersToolbox\Filesys.cpp">
+    <ClCompile Include="Source Code\ButchersToolbox\Filesys\Filesys.cpp">
       <Filter>Filesystem</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\ButchersToolbox\utf8_string\utf8_string.cpp">
       <Filter>utf8_string</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ButchersToolbox\WindowsSpecific.cpp">
+    <ClCompile Include="Source Code\ButchersToolbox\Windows\WindowsSpecific.cpp">
       <Filter>Windows Specific</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ButchersToolbox\Console.cpp">
+    <ClCompile Include="Source Code\ButchersToolbox\Console\Console.cpp">
       <Filter>Console</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\ButchersToolbox\Pointer\Pointers.cpp" />
+    <ClCompile Include="Source Code\ButchersToolbox\JSON\JSON.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source Code\ButchersToolbox\utf8_string\README.md" />
   </ItemGroup>
 </Project>
