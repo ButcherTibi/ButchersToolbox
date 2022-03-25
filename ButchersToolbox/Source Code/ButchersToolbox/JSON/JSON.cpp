@@ -5,14 +5,14 @@ using namespace std::string_literals;
 using namespace json;
 
 
-char Importer::getChar()
+char8_t Importer::getChar()
 {
-	return (*file)[pos.i];
+	return (*text)[pos.i];
 }
 
 void Importer::advance()
 {
-	char8_t chara = (*file)[pos.i];
+	char8_t chara = (*text)[pos.i];
 
 	if (chara == '\n') {
 		pos.column = 0;
@@ -32,12 +32,12 @@ bool Importer::isAtWhiteSpace()
 		chara == '\n' || chara == '\r';
 }
 
-bool Importer::checkKeyword(std::string keyword)
+bool Importer::skipKeyword(std::string keyword)
 {
 	FilePosition start = pos;
 	uint32_t keyword_index = 0;
 
-	while (pos.i < file->size()) {
+	while (pos.i < text->size()) {
 
 		char8_t chara = getChar();
 
@@ -64,7 +64,7 @@ bool Importer::skipSpacing()
 {
 	FilePosition start = pos;
 
-	while (pos.i < file->size()) {
+	while (pos.i < text->size()) {
 
 		char8_t chara = getChar();
 
@@ -84,7 +84,7 @@ bool Importer::skipToSymbol(char8_t symbol)
 {
 	FilePosition start = pos;
 
-	while (pos.i < file->size()) {
+	while (pos.i < text->size()) {
 
 		char8_t chara = getChar();
 		
@@ -118,7 +118,7 @@ void Importer::logError(std::string msg)
 
 void Importer::logError_unexpectedSymbol(std::string msg)
 {
-	char unexpected_symbol = (*file)[unexpected_pos.i];
+	char unexpected_symbol = (*text)[unexpected_pos.i];
 
 	Error& new_err = errors.emplace_back();
 	new_err.line = pos.line;
@@ -132,11 +132,11 @@ bool Importer::parseFieldName(std::string& r_field_name)
 
 		advance();
 
-		while (pos.i < file->size()) {
+		while (pos.i < text->size()) {
 
 			char8_t chara = getChar();
 
-			if ('\\') {
+			if (chara == '\\') {
 				logError("Escape sequences are not allowed in object field names");
 				return false;
 			}
@@ -288,22 +288,23 @@ uint32_t Importer::parseValue()
 	// object
 	if (chara == '{') {
 
+		uint32_t result = values.size();
+		values.emplace_back().emplace<std::vector<Field>>();
+
 		FilePosition start = pos;
 		advance();
 
 		// object has no fields
 		if (skipToSymbol('}')) {
-
-			uint32_t result = values.size();
-			values.emplace_back().emplace<std::vector<Field>>();
+			advance();
 			return result;
 		}
 
-		_obj.clear();
+		std::vector<Field> obj;
 
-		while (pos.i < file->size()) {
+		while (pos.i < text->size()) {
 
-			Field& new_field = _obj.emplace_back();
+			Field& new_field = obj.emplace_back();
 
 			// Field name
 			if (parseFieldName(new_field.name) == false) {
@@ -331,11 +332,10 @@ uint32_t Importer::parseValue()
 			}
 			else if (skipToSymbol('}')) {
 
-				advance();
+				auto& value = std::get<std::vector<Field>>(values[result]);
+				value = obj;
 
-				uint32_t result = values.size();
-				auto& value = values.emplace_back().emplace<std::vector<Field>>();
-				value = _obj;
+				advance();
 				return result;
 			}
 			else {
@@ -351,24 +351,25 @@ uint32_t Importer::parseValue()
 	// array
 	else if (chara == '[') {
 
+		uint32_t result = values.size();
+		values.emplace_back().emplace<std::vector<uint32_t>>();
+
 		FilePosition start = pos;
 		advance();
 
 		// empty array
 		if (skipToSymbol(']')) {
-
-			uint32_t result = values.size();
-			values.emplace_back().emplace<std::vector<uint32_t>>();
+			advance();
 			return result;
 		}
 		else {
-			_array.clear();
+			std::vector<uint32_t> array;
 
-			while (pos.i < file->size()) {
+			while (pos.i < text->size()) {
 
 				uint32_t value_idx = parseValue();
 				if (value_idx != invalid_index) {
-					_array.push_back(value_idx);
+					array.push_back(value_idx);
 				}
 				else {
 					return invalid_index;
@@ -380,9 +381,10 @@ uint32_t Importer::parseValue()
 				}
 				else if (skipToSymbol(']')) {
 
-					uint32_t result = values.size();
-					auto& value = values.emplace_back().emplace<std::vector<uint32_t>>();
-					value = _array;
+					advance();
+
+					auto& value = std::get<std::vector<uint32_t>>(values[result]);
+					value = array;
 
 					return result;
 				}
@@ -401,11 +403,11 @@ uint32_t Importer::parseValue()
 	else if (chara == '\"') {
 
 		FilePosition start = pos;
-		number_str.clear();
+		_number.clear();
 
 		advance();
 
-		while (pos.i < file->size()) {
+		while (pos.i < text->size()) {
 
 			char8_t chara = getChar();
 
@@ -415,34 +417,35 @@ uint32_t Importer::parseValue()
 
 				switch (getChar()) {
 				case '\"': {
-					number_str.push_back('\"');
+					_number.push_back('\"');
 					break;
 				}
 				case '\\': {
-					number_str.push_back('\\');
+					_number.push_back('\\');
 					break;
 				}
 				case 'n': {
-					number_str.push_back('\n');
+					_number.push_back('\n');
 				}
 				case 't': {
-					number_str.push_back('\t');
+					_number.push_back('\t');
 				}
 				default:
-					number_str.push_back((*file)[pos.i - 1]);
-					number_str.push_back(getChar());
+					_number.push_back((*text)[pos.i - 1]);
+					_number.push_back(getChar());
 				}
 			}
 			else if (chara == '"') {
 
 				uint32_t result = values.size();
 				auto& value = values.emplace_back().emplace<std::string>();
-				value = number_str;
+				value = _number;
 
+				advance();
 				return result;
 			}
 			else {
-				number_str.push_back(chara);
+				_number.push_back(chara);
 			}
 
 			advance();
@@ -457,9 +460,9 @@ uint32_t Importer::parseValue()
 		('0' <= chara && chara <= '9'))
 	{
 		FilePosition start = pos;
-		number_str.clear();
+		_number.clear();
 
-		while (pos.i < file->size()) {
+		while (pos.i < text->size()) {
 
 			char8_t chara = getChar();
 
@@ -467,14 +470,14 @@ uint32_t Importer::parseValue()
 				('0' <= chara && chara <= '9') ||
 				chara == '.' || chara == 'e' || chara == 'E')
 			{
-				number_str.push_back(chara);
+				_number.push_back(chara);
 				advance();
 			}
 			else {
 				try {
 					uint32_t result = values.size();
 					double& value = values.emplace_back().emplace<double>();
-					value = std::stold(number_str);
+					value = std::stold(_number);
 
 					return result;
 				}
@@ -492,13 +495,12 @@ uint32_t Importer::parseValue()
 	// boolean true
 	else if (chara == 't') {
 
-		if (checkKeyword("true")) {
+		if (skipKeyword("true")) {
 
 			uint32_t result = values.size();
 			auto& value = values.emplace_back().emplace<bool>();
 			value = true;
 
-			advance();
 			return result;
 		}
 		else {
@@ -509,13 +511,12 @@ uint32_t Importer::parseValue()
 	// boolean false
 	else if (chara == 'f') {
 
-		if (checkKeyword("false")) {
+		if (skipKeyword("false")) {
 
 			uint32_t result = values.size();
 			auto& value = values.emplace_back().emplace<bool>();
 			value = false;
 
-			advance();
 			return result;
 		}
 		else {
@@ -526,12 +527,11 @@ uint32_t Importer::parseValue()
 	// null
 	else if (chara == 'n') {
 
-		if (checkKeyword("null")) {
+		if (skipKeyword("null")) {
 
 			uint32_t result = values.size();
 			values.emplace_back().emplace<nullptr_t>();
 
-			advance();
 			return result;
 		}
 		else {
@@ -545,12 +545,168 @@ uint32_t Importer::parseValue()
 	}
 }
 
-bool Importer::parseFile(std::vector<char8_t>& text)
+bool Importer::parseText(std::vector<char8_t>& new_text)
 {
+	text = &new_text;
+	pos.line = 1;
+	pos.column = 1;
+
 	if (parseValue() != invalid_index) {
 		return true;
 	}
 	else {
 		return false;
 	}
+}
+
+void Importer::writeString(std::string str)
+{
+	for (char chara : str) {
+		text->push_back(chara);
+	}
+}
+
+void Importer::writeSpace()
+{
+	if (pretty) {
+		text->push_back(' ');
+	}
+}
+
+void Importer::writeNewLine()
+{
+	if (pretty) {
+		text->push_back('\n');
+	}
+}
+
+void Importer::writeIndentation(uint32_t indentation)
+{
+	if (pretty) {
+		for (uint32_t i = 0; i < indentation; i++) {
+			text->push_back('\t');
+		}
+	}
+}
+
+void Importer::writeValue(uint32_t value_idx, uint32_t indentation, bool field_value)
+{
+	Value& value = values[value_idx];
+
+	// Object
+	if (std::holds_alternative<std::vector<Field>>(value)) {
+
+		auto& obj = std::get<std::vector<Field>>(value);
+
+		text->push_back('{');
+		writeNewLine();
+
+		for (uint32_t i = 0; i < obj.size(); i++) {
+
+			json::Field& field = obj[i];
+
+			writeIndentation(indentation + 1);
+
+			// Name + Separator
+			writeString('\"' + field.name + "\":");
+			writeSpace();
+
+			// Value
+			writeValue(field.value, indentation + 1, true);
+
+			// Next field
+			if (i < obj.size() - 1) {
+				text->push_back(',');
+				writeNewLine();
+			}
+		}
+
+		writeNewLine();
+
+		if (field_value) {
+			writeIndentation(indentation);
+		}
+		else {
+			writeIndentation(indentation + 1);
+		}
+		writeString("}");
+	}
+	// Array
+	else if (std::holds_alternative<std::vector<uint32_t>>(value)) {
+
+		auto& arr = std::get<std::vector<uint32_t>>(value);
+
+		text->push_back('[');
+		writeNewLine();
+
+		for (uint32_t i = 0; i < arr.size(); i++) {
+
+			uint32_t array_value_idx = arr[i];
+
+			writeIndentation(indentation + 1);
+
+			writeValue(array_value_idx, indentation, false);
+
+			// Next value
+			if (i < arr.size() - 1) {
+				text->push_back(',');
+				writeNewLine();
+			}
+		}
+
+		writeNewLine();
+
+		if (field_value) {
+			writeIndentation(indentation);
+		}
+		else {
+			writeIndentation(indentation + 1);
+		}
+		writeString("]");
+	}
+	// string
+	else if (std::holds_alternative<std::string>(value)) {
+
+		auto& str = std::get<std::string>(value);
+		writeString('\"' + str + '\"');
+	}
+	// number
+	else if (std::holds_alternative<double>(value)) {
+
+		auto& number = std::get<double>(value);
+
+		writeString(std::to_string(number));
+	}
+	// bool
+	else if (std::holds_alternative<bool>(value)) {
+
+		auto& boolean = std::get<bool>(value);
+
+		if (boolean) {
+			writeString("true");
+		}
+		else {
+			writeString("false");
+		}
+	}
+	// null
+	else if (std::holds_alternative<nullptr_t>(value)) {
+		writeString("null");
+	}
+	else {
+		__debugbreak();
+	}
+}
+
+void Importer::writeText(std::vector<char8_t>& new_text, bool new_pretty)
+{
+	text = &new_text;
+	pos.i = 0;
+	pos.line = 1;
+	pos.column = 1;
+
+	// Settings
+	this->pretty = new_pretty;
+
+	writeValue(0, 0, true);
 }

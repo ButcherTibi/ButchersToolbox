@@ -1,31 +1,10 @@
-
-// Windows
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-
 // Header
 #include "Filesys.hpp"
-
-// Windows
-#include <intrin.h>
-
-// Standard
-#include <cstdio>
-
-// Mine
-#include "Filesys.hpp"
-#include "../Windows/WindowsSpecific.hpp"
-
 
 using namespace filesys;
 
 
 const uint32_t max_path_length = 1024;
-
-#define code_location \
-	("ln = " + std::to_string(__LINE__) + \
-	" fn = " + __func__ + \
-	" in file " + __FILE__).c_str()
 
 
 void filesys::getExecutablePath(std::string& exe_path)
@@ -36,59 +15,6 @@ void filesys::getExecutablePath(std::string& exe_path)
 
 	exe_path.resize(used_size);
 	exe_path.shrink_to_fit();
-}
-
-void filesys::readFile(std::string& path, std::vector<uint8_t>& r_bytes)
-{
-	if (path.empty()) {
-		return;
-	}
-
-	win32::Handle file_handle = CreateFile(path.c_str(),
-		GENERIC_READ, // desired acces
-		0,  // share mode
-		NULL,  // security atributes
-		OPEN_EXISTING,  // disposition
-		FILE_FLAG_SEQUENTIAL_SCAN, // flags and atributes
-		NULL  // template
-	);
-
-	if (file_handle.isValid() == false) {
-
-		printf("%s failed to a create file handle for path = %s \n",
-			code_location,
-			path.c_str());
-		__debugbreak();
-	}
-
-	// find file size
-	LARGE_INTEGER file_size;
-	if (GetFileSizeEx(file_handle.handle, &file_size) == false) {
-
-		printf("%s failed to find file size for path = %s \n",
-			code_location,
-			path.c_str());
-		__debugbreak();
-	}
-	r_bytes.resize(file_size.QuadPart);
-
-	// read file
-	DWORD bytes_read;
-
-	auto result = ReadFile(
-		file_handle.handle,
-		r_bytes.data(),
-		(DWORD)file_size.QuadPart,
-		&bytes_read,
-		NULL);
-
-	if (result == false)
-	{
-		printf("%s failed to read file for path =  %s \n",
-			code_location,
-			path.c_str());
-		__debugbreak();
-	}
 }
 
 void Path::_pushPathToEntries(std::string& path)
@@ -137,7 +63,7 @@ void Path::pop(uint32_t count)
 	}
 }
 
-std::string Path::toString()
+std::string Path::toString(char separator)
 {
 	std::string path;
 	
@@ -151,7 +77,7 @@ std::string Path::toString()
 			}
 	
 			if (i != last) {
-				path.push_back('\\');
+				path.push_back(separator);
 			}
 		}
 	}

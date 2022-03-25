@@ -1,0 +1,16 @@
+{
+	"field_1": 0.000000,
+	"field_2": {
+		"sub_field_1": 1.000000
+	},
+	"field_3": [
+		3.000000,
+		"string value",
+		true,
+		5.000000,
+		false,
+		{
+
+		}
+	]
+}

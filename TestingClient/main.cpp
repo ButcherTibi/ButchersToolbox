@@ -223,17 +223,7 @@ namespace Filesys_tests {
 
 	void test()
 	{
-		std::string exe_path;
-		filesys::getExecutablePath(exe_path);
 
-		filesys::Path path(exe_path);
-		path.pop(3);
-
-		path.append("/TestingClient/Tests/test.json");
-
-		std::string path_to_json = path.toString();
-		std::vector<uint8_t> bytes;
-		filesys::readFile(path_to_json, bytes);
 	}
 }
 
@@ -317,7 +307,7 @@ int main()
 
 	// Filesys
 	{
-		Filesys_tests::test();
+		// Filesys_tests::test();
 	}
 
 	// Pointers

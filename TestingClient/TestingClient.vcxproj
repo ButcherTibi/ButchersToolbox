@@ -92,6 +92,10 @@
     <ClInclude Include="Examples\utf8_string.hpp" />
     <ClInclude Include="Tests\JSON.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Tests\read_test.json" />
+    <None Include="Tests\write_test.json" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

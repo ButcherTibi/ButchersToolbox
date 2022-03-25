@@ -45,22 +45,23 @@ namespace json {
 		FilePosition pos;
 		FilePosition unexpected_pos;
 
-		std::vector<char8_t>* file;
+		std::vector<char8_t>* text;
 		std::vector<Error> errors;
 
-		// Mem cache
-		std::vector<Field> _obj;
-		std::vector<uint32_t> _array;
-		std::string number_str;
+		// Settings
+		bool pretty;
 
-	public:
-		char getChar();
+		// Mem cache
+		std::string _number;
+
+	private:
+		char8_t getChar();
 
 		void advance();
 
 		bool isAtWhiteSpace();
 
-		bool checkKeyword(std::string keyword);
+		bool skipKeyword(std::string keyword);
 
 
 		/* Skip functions */
@@ -83,9 +84,25 @@ namespace json {
 
 		uint32_t parseValue();
 
+		
+		/* Write functions */
 
+		void writeString(std::string str);
+
+		void writeSpace();
+
+		void writeNewLine();
+
+		void writeIndentation(uint32_t indentation);
+
+		void writeValue(uint32_t value_idx, uint32_t indentation, bool field_value);
+
+
+	public:
 		/* API */
+	
+		bool parseText(std::vector<char8_t>& text);
 
-		bool parseFile(std::vector<char8_t>& file);
+		void writeText(std::vector<char8_t>& text, bool pretty = false);
 	};
 }
