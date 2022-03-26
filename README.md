@@ -3,8 +3,9 @@ A personal toolbox of stuff that I use in my projects.
 
 ### Table of Contents
 1. [`utf8_string` library](#utf8_string)
-2. [`Console` namespace for text formating](#console)
-3. [`Filesys` for reading files and handling filesystem paths](#filesys)
+2. [`JSON` parser and writer](#json)
+3. [`Console` namespace for text formating](#console)
+4. [`Filesys` for reading files and handling filesystem paths](#filesys)
 
 ### Requirements
 Visual Studio 2022 with C++20 standard.
@@ -13,13 +14,16 @@ Visual Studio 2022 with C++20 standard.
 
 ### [utf8_string](./ButchersToolbox/Source%20Code/ButchersToolbox/utf8_string/)
 UTF-8 string library similar to `System.String` from C#.
-**Almost feature complete.**
+**This is feature complete.**
 
-### Console
+### [JSON](./ButchersToolbox/Source%20Code/ButchersToolbox/JSON/)
+Functions for parsing, modifying and writing JSON. Complete with pretty indenting of JSON text.
+
+### [Console](./ButchersToolbox/Source%20Code/ButchersToolbox/Console/)
 Ever wandered how to print to console colored text ?
 Did you know you need to configure the console terminal, to enable UTF-8 to work ?
 
-### Filesys
+### [Filesys](./ButchersToolbox/Source%20Code/ButchersToolbox/Filesys/)
 It simply started with my hate of using regular expressions to handle filesystem paths.
 I used this extensively to read compiled HLSL with no extra copies directly into a `std::vector`, also used the Win32 `FILE_FLAG_SEQUENTIAL_SCAN` to make read faster.
-*Barely started*
+*This is bare bones.*

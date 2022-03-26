@@ -3,5 +3,7 @@
 
 namespace JSON_tests {
 
-	void test();
+	void performance();
+
+	void correctness();
 }

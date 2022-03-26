@@ -5,12 +5,12 @@ using namespace std::string_literals;
 using namespace json;
 
 
-char8_t Importer::getChar()
+char8_t Structure::getChar()
 {
 	return (*text)[pos.i];
 }
 
-void Importer::advance()
+void Structure::advance()
 {
 	char8_t chara = (*text)[pos.i];
 
@@ -25,14 +25,14 @@ void Importer::advance()
 	pos.i += 1;
 }
 
-bool Importer::isAtWhiteSpace()
+bool Structure::isAtWhiteSpace()
 {
 	char8_t chara = getChar();
 	return chara == ' ' || chara == '\t' ||
 		chara == '\n' || chara == '\r';
 }
 
-bool Importer::skipKeyword(std::string keyword)
+bool Structure::skipKeyword(std::string keyword)
 {
 	FilePosition start = pos;
 	uint32_t keyword_index = 0;
@@ -60,7 +60,7 @@ bool Importer::skipKeyword(std::string keyword)
 	return false;
 }
 
-bool Importer::skipSpacing()
+bool Structure::skipSpacing()
 {
 	FilePosition start = pos;
 
@@ -80,7 +80,7 @@ bool Importer::skipSpacing()
 	return false;
 }
 
-bool Importer::skipToSymbol(char8_t symbol)
+bool Structure::skipToSymbol(char8_t symbol)
 {
 	FilePosition start = pos;
 
@@ -108,7 +108,7 @@ bool Importer::skipToSymbol(char8_t symbol)
 	return false;
 }
 
-void Importer::logError(std::string msg)
+void Structure::logError(std::string msg)
 {
 	Error& new_err = errors.emplace_back();
 	new_err.msg = msg;
@@ -116,7 +116,7 @@ void Importer::logError(std::string msg)
 	new_err.column = pos.column;
 }
 
-void Importer::logError_unexpectedSymbol(std::string msg)
+void Structure::logError_unexpectedSymbol(std::string msg)
 {
 	char unexpected_symbol = (*text)[unexpected_pos.i];
 
@@ -126,7 +126,7 @@ void Importer::logError_unexpectedSymbol(std::string msg)
 	new_err.msg = "Unexpected symbol '"s + unexpected_symbol + "' "s + msg;
 }
 
-bool Importer::parseFieldName(std::string& r_field_name)
+bool Structure::parseFieldName(std::string& r_field_name)
 {
 	if (skipToSymbol('"')) {
 
@@ -169,117 +169,10 @@ bool Importer::parseFieldName(std::string& r_field_name)
 	}
 }
 
-//enum class NumberParseMode {
-//	INTEGER,
-//	FRACTION,
-//	EXPONENT,
-//};
-//
-//#define isUTF8Number(c) \
-//	c > 0x2f && c < 0x3a
-//
-//void convertCharsToInt(std::vector<char>& integer_chars, int64_t& int_num)
-//{
-//	uint64_t m = 1;
-//
-//	int32_t count = (int32_t)integer_chars.size() - 1;
-//	for (int32_t idx = count; idx != -1; idx--) {
-//
-//		int64_t digit = (int64_t)(integer_chars[idx] - '0');
-//		int64_t a = digit * m;
-//
-//		int_num += a;
-//		m *= 10;
-//	}
-//}
-//
-//ErrStack Graph::_parseNumber(uint64_t& i, std::vector<uint8_t>& text, Value& number)
-//{
-//	this->integer_chars.clear();
-//	this->frac_chars.clear();
-//
-//	NumberParseMode mode = NumberParseMode::INTEGER;
-//
-//	int64_t int_sign = 1;
-//	int64_t int_part = 0;
-//	bool exp_sign = 1;
-//
-//	for (; i < text.size(); i++) {
-//
-//		uint8_t& c = text[i];
-//
-//		switch (mode) {
-//		case NumberParseMode::INTEGER:
-//
-//			if (c == '+') {
-//				int_sign = 1;
-//			}
-//			else if (c == '-') {
-//				int_sign = -1;
-//			}
-//			else if (isUTF8Number(c)) {
-//				integer_chars.push_back(c);
-//			}
-//			else {
-//				convertCharsToInt(integer_chars, int_part);
-//				int_part *= int_sign;
-//
-//				if (c == '.') {
-//					mode = NumberParseMode::FRACTION;
-//				}
-//				else {
-//					number.value = (double)int_part;
-//					return ErrStack();
-//				}
-//			}
-//			break;
-//
-//		case NumberParseMode::FRACTION:
-//
-//			if (isUTF8Number(c)) {
-//				frac_chars.push_back(c);
-//			}
-//			else if (c == 'e' || c == 'E') {
-//				mode = NumberParseMode::EXPONENT;
-//			}
-//			else {
-//				// Extract 0.1234
-//				int64_t frac_part;
-//				convertCharsToInt(frac_chars, frac_part);
-//				double frac_part_dbl = (double)frac_part / std::pow(10.0, (double)frac_chars.size());
-//
-//				number.value = (double)int_part + frac_part_dbl;
-//				return ErrStack();
-//			}
-//			break;
-//
-//		case NumberParseMode::EXPONENT: {
-//
-//			if (c == '+') {
-//				exp_sign = 1;
-//			}
-//			else if (c == '-') {
-//				exp_sign = 0;
-//			}
-//			else if (isUTF8Number(c)) {
-//
-//			}
-//			else {
-//				number.value = (double)1.0;
-//				return ErrStack();
-//			}
-//			break;
-//		}
-//		}
-//	}
-//	return ErrStack(code_location,
-//		msgWithPos("premature end of characters in file when parsing number",
-//			i - 1, text));
-//}
-
-uint32_t Importer::parseValue()
+uint32_t Structure::parseValue()
 {
 	if (skipSpacing() == false) {
+		logError("Found nothing but spacing");
 		return invalid_index;
 	}
 
@@ -411,31 +304,7 @@ uint32_t Importer::parseValue()
 
 			char8_t chara = getChar();
 
-			if (chara == '\\') {
-
-				advance();
-
-				switch (getChar()) {
-				case '\"': {
-					_number.push_back('\"');
-					break;
-				}
-				case '\\': {
-					_number.push_back('\\');
-					break;
-				}
-				case 'n': {
-					_number.push_back('\n');
-				}
-				case 't': {
-					_number.push_back('\t');
-				}
-				default:
-					_number.push_back((*text)[pos.i - 1]);
-					_number.push_back(getChar());
-				}
-			}
-			else if (chara == '"') {
+			if (chara == '"') {
 
 				uint32_t result = values.size();
 				auto& value = values.emplace_back().emplace<std::string>();
@@ -545,9 +414,10 @@ uint32_t Importer::parseValue()
 	}
 }
 
-bool Importer::parseText(std::vector<char8_t>& new_text)
+bool Structure::parse(std::vector<char8_t>& new_text)
 {
 	text = &new_text;
+	pos.i = 0;
 	pos.line = 1;
 	pos.column = 1;
 
@@ -559,28 +429,28 @@ bool Importer::parseText(std::vector<char8_t>& new_text)
 	}
 }
 
-void Importer::writeString(std::string str)
+void Structure::writeString(std::string str)
 {
 	for (char chara : str) {
 		text->push_back(chara);
 	}
 }
 
-void Importer::writeSpace()
+void Structure::writeSpace()
 {
 	if (pretty) {
 		text->push_back(' ');
 	}
 }
 
-void Importer::writeNewLine()
+void Structure::writeNewLine()
 {
 	if (pretty) {
 		text->push_back('\n');
 	}
 }
 
-void Importer::writeIndentation(uint32_t indentation)
+void Structure::writeIndentation(uint32_t indentation)
 {
 	if (pretty) {
 		for (uint32_t i = 0; i < indentation; i++) {
@@ -589,7 +459,7 @@ void Importer::writeIndentation(uint32_t indentation)
 	}
 }
 
-void Importer::writeValue(uint32_t value_idx, uint32_t indentation, bool field_value)
+void Structure::writeValue(uint32_t value_idx, uint32_t indentation, bool field_value)
 {
 	Value& value = values[value_idx];
 
@@ -598,7 +468,7 @@ void Importer::writeValue(uint32_t value_idx, uint32_t indentation, bool field_v
 
 		auto& obj = std::get<std::vector<Field>>(value);
 
-		text->push_back('{');
+		writeString("{");
 		writeNewLine();
 
 		for (uint32_t i = 0; i < obj.size(); i++) {
@@ -622,13 +492,7 @@ void Importer::writeValue(uint32_t value_idx, uint32_t indentation, bool field_v
 		}
 
 		writeNewLine();
-
-		if (field_value) {
-			writeIndentation(indentation);
-		}
-		else {
-			writeIndentation(indentation + 1);
-		}
+		writeIndentation(indentation);
 		writeString("}");
 	}
 	// Array
@@ -636,7 +500,7 @@ void Importer::writeValue(uint32_t value_idx, uint32_t indentation, bool field_v
 
 		auto& arr = std::get<std::vector<uint32_t>>(value);
 
-		text->push_back('[');
+		writeString("[");
 		writeNewLine();
 
 		for (uint32_t i = 0; i < arr.size(); i++) {
@@ -645,7 +509,7 @@ void Importer::writeValue(uint32_t value_idx, uint32_t indentation, bool field_v
 
 			writeIndentation(indentation + 1);
 
-			writeValue(array_value_idx, indentation, false);
+			writeValue(array_value_idx, indentation + 1, false);
 
 			// Next value
 			if (i < arr.size() - 1) {
@@ -655,13 +519,7 @@ void Importer::writeValue(uint32_t value_idx, uint32_t indentation, bool field_v
 		}
 
 		writeNewLine();
-
-		if (field_value) {
-			writeIndentation(indentation);
-		}
-		else {
-			writeIndentation(indentation + 1);
-		}
+		writeIndentation(indentation);
 		writeString("]");
 	}
 	// string
@@ -698,15 +556,83 @@ void Importer::writeValue(uint32_t value_idx, uint32_t indentation, bool field_v
 	}
 }
 
-void Importer::writeText(std::vector<char8_t>& new_text, bool new_pretty)
+void Structure::toString(std::vector<char8_t>& new_text, bool new_pretty)
 {
+	if (values.empty()) {
+		return;
+	}
+
 	text = &new_text;
 	pos.i = 0;
 	pos.line = 1;
 	pos.column = 1;
 
 	// Settings
-	this->pretty = new_pretty;
+	pretty = new_pretty;
 
 	writeValue(0, 0, true);
 }
+
+Value& Structure::getRoot()
+{
+	return values.front();
+}
+
+template<typename T>
+T& Structure::get(Value& value)
+{
+	return std::get<T>(value);
+}
+template bool&        Structure::get<bool>(Value& value);
+template double&      Structure::get<double>(Value& value);
+template std::string& Structure::get<std::string>(Value& value);
+template Array&       Structure::get<Array>(Value& value);
+template Object&      Structure::get<Object>(Value& value);
+template nullptr_t&   Structure::get<nullptr_t>(Value& value);
+
+Value& Structure::getValue(Object& object, std::string field_name)
+{
+	for (Field& field : object) {
+		if (field.name == field_name) {
+			return values[field.value];
+		}
+	}
+
+	throw "field not found";
+}
+
+Value& Structure::getValue(Object& object, uint32_t field_index)
+{
+	uint32_t field_value = object[field_index].value;
+	return values[field_value];
+}
+
+template<typename T>
+T& Structure::add(Array& array)
+{
+	array.push_back((uint32_t)values.size());
+
+	return values.emplace_back().emplace<T>();
+}
+template bool&        Structure::add<bool>(Array& array);
+template double&      Structure::add<double>(Array& array);
+template std::string& Structure::add<std::string>(Array& array);
+template Array&       Structure::add<Array>(Array& array);
+template Object&      Structure::add<Object>(Array& array);
+template nullptr_t&   Structure::add<nullptr_t>(Array& array);
+
+template<typename T>
+T& Structure::addField(Object& object, std::string field_name)
+{
+	Field& new_field = object.emplace_back();
+	new_field.name = field_name;
+	new_field.value = (uint32_t)values.size();
+
+	return values.emplace_back().emplace<T>();
+}
+template bool&        Structure::addField<bool>(Object& object, std::string field_name);
+template double&      Structure::addField<double>(Object& object, std::string field_name);
+template std::string& Structure::addField<std::string>(Object& object, std::string field_name);
+template Array&       Structure::addField<Array>(Object& object, std::string field_name);
+template Object&      Structure::addField<Object>(Object& object, std::string field_name);
+template nullptr_t&   Structure::addField<nullptr_t>(Object& object, std::string field_name);

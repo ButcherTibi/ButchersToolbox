@@ -55,5 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Source Code\ButchersToolbox\utf8_string\README.md" />
+    <None Include="Source Code\ButchersToolbox\JSON\README.md" />
   </ItemGroup>
 </Project>

@@ -10,17 +10,21 @@ namespace json {
 
 	const uint32_t invalid_index = 0xFFFF'FFFF;
 
+	typedef std::vector<uint32_t> Array;
+
 	struct Field {
 		std::string name;
 		uint32_t value;
 	};
 
+	typedef std::vector<Field> Object;
+
 	typedef std::variant<
 		bool,  // boolean
 		double,  // Number
 		std::string,  // String
-		std::vector<uint32_t>,  // Array
-		std::vector<Field>,  // Object
+		Array,  // Array
+		Object,  // Object
 		nullptr_t  // null
 	> Value;
 
@@ -38,7 +42,7 @@ namespace json {
 		uint32_t column;
 	};
 
-	class Importer {
+	class Structure {
 	public:
 		std::vector<Value> values;
 		
@@ -46,7 +50,7 @@ namespace json {
 		FilePosition unexpected_pos;
 
 		std::vector<char8_t>* text;
-		std::vector<Error> errors;
+		std::vector<Error> errors;  // lookup here for errors
 
 		// Settings
 		bool pretty;
@@ -99,10 +103,67 @@ namespace json {
 
 
 	public:
+		/* Read */
+
+		/// <summary>
+		/// Gets the top level value of the JSON structure
+		/// </summary>
+		Value& getRoot();
+
+		template<typename T>
+		T& get(Value& value);
+
+		/// <summary>
+		/// Get field value in JSON object base on field name
+		/// </summary>
+		/// <param name="object">= Object where the field is</param>
+		/// <param name="field_name">= Name of the field to find</param>
+		/// <returns>Reference to found field value</returns>
+		Value& getValue(Object& object, std::string field_name);
+
+		/// <summary>
+		/// Get field value in JSON object base on field index
+		/// </summary>
+		/// <param name="object">= Object where the field is</param>
+		/// <param name="field_index">= Index of the field in object</param>
+		/// <returns>Reference to found field value</returns>
+		Value& getValue(Object& object, uint32_t field_index);
+
+
+		/* Write */
+
+		/// <summary>
+		/// Add a new value to the JSON array
+		/// </summary>
+		/// <param name="array">= Array to add value to</param>
+		/// <returns>Reference to new element in array</returns>
+		template<typename T>
+		T& add(Array& array);
+
+		/// <summary>
+		/// Add a new field to JSON object
+		/// </summary>
+		/// <param name="object">= Object to add field to</param>
+		/// <param name="field_name">= Name of the new field to be added</param>
+		/// <returns>Reference to new field value in object</returns>
+		template<typename T>
+		T& addField(Object& object, std::string field_name);
+
+
 		/* API */
 	
-		bool parseText(std::vector<char8_t>& text);
+		/// <summary>
+		/// Parses the JSON and creates a structure of values
+		/// </summary>
+		/// <param name="json_text">= JSON to be parsed into values</param>
+		/// <returns>False if the were parsing errors, errors are found the errors field</returns>
+		bool parse(std::vector<char8_t>& json_text);
 
-		void writeText(std::vector<char8_t>& text, bool pretty = false);
+		/// <summary>
+		/// Creates a JSON representation from the structure of values
+		/// </summary>
+		/// <param name="r_json_text">= The resulting JSON</param>
+		/// <param name="pretty">= Enables pretty indentation of the resulting JSON</param>
+		void toString(std::vector<char8_t>& r_json_text, bool pretty = false);
 	};
 }

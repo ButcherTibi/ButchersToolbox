@@ -114,6 +114,7 @@
     <ClCompile Include="Source Code\ButchersToolbox\Windows\WindowsSpecific.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Source Code\ButchersToolbox\JSON\README.md" />
     <None Include="Source Code\ButchersToolbox\utf8_string\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

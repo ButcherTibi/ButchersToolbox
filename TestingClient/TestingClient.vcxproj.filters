@@ -11,5 +11,7 @@
   <ItemGroup>
     <None Include="Tests\read_test.json" />
     <None Include="Tests\write_test.json" />
+    <None Include="Tests\big_parse_test.json" />
+    <None Include="Tests\big_toString_test.json" />
   </ItemGroup>
 </Project>

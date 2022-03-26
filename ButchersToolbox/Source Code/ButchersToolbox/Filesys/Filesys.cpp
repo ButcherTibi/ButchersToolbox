@@ -7,17 +7,7 @@ using namespace filesys;
 const uint32_t max_path_length = 1024;
 
 
-void filesys::getExecutablePath(std::string& exe_path)
-{
-	exe_path.resize(max_path_length);
-
-	uint32_t used_size = GetModuleFileName(NULL, exe_path.data(), exe_path.size());
-
-	exe_path.resize(used_size);
-	exe_path.shrink_to_fit();
-}
-
-void Path::_pushPathToEntries(std::string& path)
+void Path::_pushPathToEntries(const std::string& path)
 {
 	uint32_t i = 0;
 	std::string entry;
@@ -46,9 +36,28 @@ void Path::_pushPathToEntries(std::string& path)
 	}
 }
 
-Path::Path(std::string path)
+Path::Path(std::string string_path)
+{
+	this->_pushPathToEntries(string_path);
+}
+
+Path Path::operator=(std::string string_path)
 {	
-	_pushPathToEntries(path);
+	this->_pushPathToEntries(string_path);
+	return *this;
+}
+
+Path Path::executablePath()
+{
+	std::string exe_path;
+	exe_path.resize(max_path_length);
+
+	uint32_t used_size = GetModuleFileName(NULL, exe_path.data(), exe_path.size());
+
+	exe_path.resize(used_size);
+	exe_path.shrink_to_fit();
+
+	return exe_path;
 }
 
 void Path::append(std::string path)

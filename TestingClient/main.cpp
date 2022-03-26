@@ -322,7 +322,8 @@ int main()
 
 	// JSON
 	{
-		JSON_tests::test();
+		// JSON_tests::correctness();
+		// JSON_tests::performance();
 	}
 
 	printf("\nTests have been run \n");
