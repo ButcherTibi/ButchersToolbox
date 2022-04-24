@@ -11,18 +11,18 @@ void JSON_tests::performance()
 	filesys::Path read_path;
 	filesys::Path write_path;
 	{
-		auto dir_path = filesys::Path::executablePath();
+		auto dir_path = filesys::Path<char8_t>::executablePath();
 		dir_path.pop(3);
 
 		read_path = dir_path;
 		write_path = dir_path;
 
-		read_path.append("/TestingClient/Tests/big_parse_test.json");
-		write_path.append("/TestingClient/Tests/big_toString_test.json");
+		read_path.append(u8"/TestingClient/Tests/big_parse_test.json");
+		write_path.append(u8"/TestingClient/Tests/big_toString_test.json");
 	}
 
-	std::vector<char8_t> readed_text;
-	read_path.readFile(readed_text);
+	std::string readed_text;
+	read_path.read(readed_text);
 
 	json::Structure structure;
 	structure.parse(readed_text);
@@ -31,10 +31,10 @@ void JSON_tests::performance()
 		printf(structure.errors[0].msg.c_str());
 	}
 	else {
-		std::vector<char8_t> writen_text;
+		std::string writen_text;
 		structure.toString(writen_text, true);
 
-		write_path.writeFile(writen_text);
+		write_path.write(writen_text);
 	}
 }
 
@@ -43,18 +43,18 @@ void JSON_tests::correctness()
 	filesys::Path read_path;
 	filesys::Path write_path;
 	{
-		auto dir_path = filesys::Path::executablePath();
+		auto dir_path = filesys::Path<char8_t>::executablePath();
 		dir_path.pop(3);
 
 		read_path = dir_path;
 		write_path = dir_path;
 
-		read_path.append("/TestingClient/Tests/read_test.json");
-		write_path.append("/TestingClient/Tests/write_test.json");
+		read_path.append(u8"/TestingClient/Tests/read_test.json");
+		write_path.append(u8"/TestingClient/Tests/write_test.json");
 	}
 
-	std::vector<char8_t> readed_text;
-	read_path.readFile(readed_text);
+	std::string readed_text;
+	read_path.read(readed_text);
 
 	json::Structure structure;
 	structure.parse(readed_text);
@@ -84,8 +84,8 @@ void JSON_tests::correctness()
 		new_field = 1234;
 	}
 
-	std::vector<char8_t> writen_text;
+	std::string writen_text;
 	structure.toString(writen_text, true);
 
-	write_path.writeFile(writen_text);
+	write_path.write(writen_text);
 }

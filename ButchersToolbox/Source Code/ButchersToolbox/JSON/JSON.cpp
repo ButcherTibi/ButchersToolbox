@@ -414,7 +414,7 @@ uint32_t Structure::parseValue()
 	}
 }
 
-bool Structure::parse(std::vector<char8_t>& new_text)
+bool Structure::parse(std::string& new_text)
 {
 	text = &new_text;
 	pos.i = 0;
@@ -556,7 +556,7 @@ void Structure::writeValue(uint32_t value_idx, uint32_t indentation, bool field_
 	}
 }
 
-void Structure::toString(std::vector<char8_t>& new_text, bool new_pretty)
+void Structure::toString(std::string& new_text, bool new_pretty)
 {
 	if (values.empty()) {
 		return;

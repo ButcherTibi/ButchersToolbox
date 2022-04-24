@@ -17,9 +17,10 @@ namespace win32 {
 	// Wrap Handle so that it frees memory automatically
 	class Handle {
 	public:
-		HANDLE handle = INVALID_HANDLE_VALUE;;
+		HANDLE handle;
 
 	public:
+		Handle();
 		Handle(HANDLE ms_handle);
 
 		Handle& operator=(HANDLE ms_handle);

@@ -49,7 +49,7 @@ namespace json {
 		FilePosition pos;
 		FilePosition unexpected_pos;
 
-		std::vector<char8_t>* text;
+		std::string* text;
 		std::vector<Error> errors;  // lookup here for errors
 
 		// Settings
@@ -157,13 +157,13 @@ namespace json {
 		/// </summary>
 		/// <param name="json_text">= JSON to be parsed into values</param>
 		/// <returns>False if the were parsing errors, errors are found the errors field</returns>
-		bool parse(std::vector<char8_t>& json_text);
+		bool parse(std::string& json_text);
 
 		/// <summary>
 		/// Creates a JSON representation from the structure of values
 		/// </summary>
 		/// <param name="r_json_text">= The resulting JSON</param>
 		/// <param name="pretty">= Enables pretty indentation of the resulting JSON</param>
-		void toString(std::vector<char8_t>& r_json_text, bool pretty = false);
+		void toString(std::string& r_json_text, bool pretty = false);
 	};
 }

@@ -48,6 +48,11 @@ std::string win32::getLastError()
 	return error_msg;
 }
 
+Handle::Handle()
+{
+	this->handle = INVALID_HANDLE_VALUE;
+}
+
 Handle::Handle(HANDLE ms_handle)
 {
 	this->handle = ms_handle;
