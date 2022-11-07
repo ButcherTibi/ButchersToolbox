@@ -391,7 +391,10 @@ public:
 	/// </summary>
 	void erase(const char8_t* utf8_string_literal);
 
-	// erase all
+	/// <summary>
+	/// Erases all occurences of target
+	/// </summary>
+	// void eraseAll(utf8_string& target, std::vector<not_sure>& memory);
 
 
 	/* Copy */
@@ -405,8 +408,6 @@ public:
 	/// Copy selection into a new utf8_string
 	/// </summary>
 	utf8_string copy(iter& start, uint32_t length);
-
-	// copyTo
 
 	/// <summary>
 	/// Fill other string with bytes content (excludes null character)

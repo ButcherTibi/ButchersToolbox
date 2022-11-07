@@ -26,22 +26,28 @@ inline void assert_cond(bool condition, const char* fail_msg) {
 	" fn = " + __func__ + \
 	" in file " + __FILE__).c_str()
 
-
-std::string win32::getLastError()
+void win32::check(BOOL function_call_value)
 {
-	LPSTR buffer;
+	if (function_call_value == false) {
+		__debugbreak();
+	}
+}
 
-	FormatMessageA(
+std::wstring win32::getLastError()
+{
+	LPWSTR buffer;
+
+	FormatMessageW(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 		NULL,
 		GetLastError(),
 		0,
-		(LPSTR)&buffer,
+		(LPWSTR)&buffer,
 		0,
 		NULL
 	);
 
-	std::string error_msg = buffer;
+	std::wstring error_msg = buffer;
 
 	LocalFree(buffer);
 
@@ -55,15 +61,14 @@ Handle::Handle()
 
 Handle::Handle(HANDLE ms_handle)
 {
+	close();
 	this->handle = ms_handle;
 }
 
 Handle& Handle::operator=(HANDLE ms_handle)
 {
-	assert_cond(this->handle == INVALID_HANDLE_VALUE);
-
+	close();
 	this->handle = ms_handle;
-
 	return *this;
 }
 
@@ -81,16 +86,19 @@ bool Handle::isValid()
 	return true;
 }
 
-Handle::~Handle()
+void Handle::close()
 {
 	if (isValid()) {
-
-#if _DEBUG
-		if (CloseHandle(handle) == 0) {
-			printf((std::string(code_location) + "failed close handle" + getLastError()).c_str());
-		}
-#else
-		CloseHandle(_file_handle);
-#endif
+		CloseHandle(handle);
 	}
+}
+
+Handle::~Handle()
+{
+	close();
+}
+
+void win32::printToOutput(std::wstring message)
+{
+	OutputDebugStringW(message.c_str());
 }

@@ -10,8 +10,10 @@
 
 namespace win32 {
 
+	void check(BOOL function_call_value);
+
 	// Win32's GetLastError but as a human readable string
-	std::string getLastError();
+	std::wstring getLastError();
 
 
 	// Wrap Handle so that it frees memory automatically
@@ -27,6 +29,16 @@ namespace win32 {
 
 		bool isValid();
 
+		void close();
+
 		~Handle();
 	};
+
+
+	/// <summary>
+	/// Prints to the Output window in Visual Studio.
+	/// Usefull when printing from Dynamic Linked Library
+	/// </summary>
+	/// <param name="message">= message to be printed</param>
+	void printToOutput(std::wstring message);
 }

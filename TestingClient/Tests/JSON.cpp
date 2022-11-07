@@ -11,18 +11,18 @@ void JSON_tests::performance()
 	filesys::Path read_path;
 	filesys::Path write_path;
 	{
-		auto dir_path = filesys::Path<char8_t>::executablePath();
+		auto dir_path = filesys::Path<char>::executablePath();
 		dir_path.pop(3);
 
 		read_path = dir_path;
 		write_path = dir_path;
 
-		read_path.append(u8"/TestingClient/Tests/big_parse_test.json");
-		write_path.append(u8"/TestingClient/Tests/big_toString_test.json");
+		read_path.append("/TestingClient/Tests/big_parse_test.json");
+		write_path.append("/TestingClient/Tests/big_toString_test.json");
 	}
 
 	std::string readed_text;
-	read_path.read(readed_text);
+	filesys::File<char>::read(read_path.toString(), readed_text);
 
 	json::Structure structure;
 	structure.parse(readed_text);
@@ -34,7 +34,7 @@ void JSON_tests::performance()
 		std::string writen_text;
 		structure.toString(writen_text, true);
 
-		write_path.write(writen_text);
+		filesys::File<char>::write(write_path.toString(), writen_text.size(), writen_text.data());
 	}
 }
 
@@ -43,18 +43,18 @@ void JSON_tests::correctness()
 	filesys::Path read_path;
 	filesys::Path write_path;
 	{
-		auto dir_path = filesys::Path<char8_t>::executablePath();
+		auto dir_path = filesys::Path<char>::executablePath();
 		dir_path.pop(3);
 
 		read_path = dir_path;
 		write_path = dir_path;
 
-		read_path.append(u8"/TestingClient/Tests/read_test.json");
-		write_path.append(u8"/TestingClient/Tests/write_test.json");
+		read_path.append("/TestingClient/Tests/read_test.json");
+		write_path.append("/TestingClient/Tests/write_test.json");
 	}
 
 	std::string readed_text;
-	read_path.read(readed_text);
+	filesys::File<char>::read(read_path.toString(), readed_text);
 
 	json::Structure structure;
 	structure.parse(readed_text);
@@ -87,5 +87,5 @@ void JSON_tests::correctness()
 	std::string writen_text;
 	structure.toString(writen_text, true);
 
-	write_path.write(writen_text);
+	filesys::File<char>::write(write_path.toString(), writen_text.size(), writen_text.data());
 }
