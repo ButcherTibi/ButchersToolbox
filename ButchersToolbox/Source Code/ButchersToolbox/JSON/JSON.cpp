@@ -12,7 +12,7 @@ char8_t Structure::getChar()
 
 void Structure::advance()
 {
-	char8_t chara = (*text)[pos.i];
+	char8_t chara = getChar();
 
 	if (chara == '\n') {
 		pos.column = 0;

@@ -17,8 +17,8 @@ void JSON_tests::performance()
 		read_path = dir_path;
 		write_path = dir_path;
 
-		read_path.append("/TestingClient/Tests/big_parse_test.json");
-		write_path.append("/TestingClient/Tests/big_toString_test.json");
+		read_path.append("/TestingClient/Tests/JSON/big_parse_test.json");
+		write_path.append("/TestingClient/Tests/JSON/big_toString_test.json");
 	}
 
 	std::string readed_text;
@@ -38,7 +38,7 @@ void JSON_tests::performance()
 	}
 }
 
-void JSON_tests::correctness()
+void JSON_tests::testCorrectness()
 {
 	filesys::Path read_path;
 	filesys::Path write_path;
@@ -49,8 +49,8 @@ void JSON_tests::correctness()
 		read_path = dir_path;
 		write_path = dir_path;
 
-		read_path.append("/TestingClient/Tests/read_test.json");
-		write_path.append("/TestingClient/Tests/write_test.json");
+		read_path.append("/TestingClient/Tests/JSON/read_test.json");
+		write_path.append("/TestingClient/Tests/JSON/write_test.json");
 	}
 
 	std::string readed_text;

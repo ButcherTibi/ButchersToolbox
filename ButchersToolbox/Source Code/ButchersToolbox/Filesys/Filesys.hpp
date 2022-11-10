@@ -12,9 +12,14 @@
 
 namespace filesys {
 
+	/**
+	 * @brief The maximum length of a path in characters.
+	 * Only used for certain things.
+	*/
 	const uint32_t max_path_length = 1024;
 
 
+	/** @brief Path class for handling filesystem paths. */
 #if UNICODE
 	template<typename T = wchar_t>
 #else
@@ -28,22 +33,41 @@ namespace filesys {
 		void _pushPathToEntries(const string& path);
 
 	public:
+
 		Path() = default;
 		Path(string string_path);
 
-		// Operators
+
+		/* Operators */
+
 		Path operator=(string string_path);
 
-		static Path executablePath();
 
-		// Add
+		/* Add */
+
+		/** @brief Append a new segment to the path. */
 		void append(string entry);
 		
-		// Delete
+
+		/* Delete */
+
+		/** @brief Delete the last n entries in path. */
 		void pop(uint32_t count = 1);	
 
-		// Export
-		string toString(char separator = '\\');
+
+		/* Other */
+
+		/**
+		 * @brief Concatenates all entries adding a separator between them.
+		 * @param separator Separator to use when concatenating.
+		 * @return String representation of this path.
+		*/
+		string toString(T separator = '\\');
+
+		/**
+		 * @brief Return the full path to executabe of the application.
+		*/
+		static Path executablePath();
 	};
 
 
@@ -81,8 +105,13 @@ namespace filesys {
 
 		static size_t size(string file_path);
 
-		static std::chrono::time_point<std::chrono::system_clock> lastModifiedTime(string file_path);
+		static time_point lastModifiedTime(string file_path);
 	};
+
+
+	/****************************************************************************************************/
+	/*                               Template implementations                                           */
+	/****************************************************************************************************/
 
 
 	template<typename T>
@@ -124,6 +153,7 @@ namespace filesys {
 	template<typename T>
 	Path<T> Path<T>::operator=(string string_path)
 	{
+		this->entries.clear();
 		this->_pushPathToEntries(string_path);
 		return *this;
 	}
@@ -157,7 +187,7 @@ namespace filesys {
 	}
 
 	template<typename T>
-	std::basic_string<T> Path<T>::toString(char separator)
+	std::basic_string<T> Path<T>::toString(T separator)
 	{
 		string path;
 

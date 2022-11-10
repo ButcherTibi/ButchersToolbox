@@ -85,18 +85,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Tests\JSON.cpp" />
+    <ClCompile Include="Tests\JSON\JSON.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Tests\SparseVector\SparseVector.cpp" />
+    <ClCompile Include="Tests\utf8_string\utf8_string.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Examples\utf8_string.hpp" />
-    <ClInclude Include="Tests\JSON.hpp" />
+    <ClInclude Include="Tests\JSON\JSON.hpp" />
+    <ClInclude Include="Tests\SparseVector\SparseVector.hpp" />
+    <ClInclude Include="Tests\utf8_string\utf8_string.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Tests\big_parse_test.json" />
-    <None Include="Tests\big_toString_test.json" />
-    <None Include="Tests\read_test.json" />
-    <None Include="Tests\write_test.json" />
+    <None Include="Tests\JSON\big_parse_test.json" />
+    <None Include="Tests\JSON\big_toString_test.json" />
+    <None Include="Tests\JSON\read_test.json" />
+    <None Include="Tests\JSON\write_test.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

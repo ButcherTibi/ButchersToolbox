@@ -2,16 +2,20 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Tests\JSON.cpp" />
+    <ClCompile Include="Tests\JSON\JSON.cpp" />
+    <ClCompile Include="Tests\utf8_string\utf8_string.cpp" />
+    <ClCompile Include="Tests\SparseVector\SparseVector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Examples\utf8_string.hpp" />
-    <ClInclude Include="Tests\JSON.hpp" />
+    <ClInclude Include="Tests\JSON\JSON.hpp" />
+    <ClInclude Include="Tests\utf8_string\utf8_string.hpp" />
+    <ClInclude Include="Tests\SparseVector\SparseVector.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Tests\read_test.json" />
-    <None Include="Tests\write_test.json" />
-    <None Include="Tests\big_parse_test.json" />
-    <None Include="Tests\big_toString_test.json" />
+    <None Include="Tests\JSON\read_test.json" />
+    <None Include="Tests\JSON\write_test.json" />
+    <None Include="Tests\JSON\big_parse_test.json" />
+    <None Include="Tests\JSON\big_toString_test.json" />
   </ItemGroup>
 </Project>

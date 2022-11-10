@@ -43,20 +43,21 @@ namespace json {
 	};
 
 	class Structure {
-	public:
 		std::vector<Value> values;
 		
 		FilePosition pos;
 		FilePosition unexpected_pos;
 
 		std::string* text;
-		std::vector<Error> errors;  // lookup here for errors
-
+		
 		// Settings
 		bool pretty;
 
 		// Mem cache
 		std::string _number;
+
+	public:
+		std::vector<Error> errors;  // lookup here for errors
 
 	private:
 		char8_t getChar();
