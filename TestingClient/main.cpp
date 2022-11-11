@@ -9,6 +9,7 @@
 #include "Tests/SparseVector/SparseVector.hpp"
 
 #include "Examples\utf8_string.hpp"
+#include "Examples/JSON.hpp"
 
 #include "ButchersToolbox\Console\Console.hpp"
 #include "ButchersToolbox\Pointer\Pointers.hpp"
@@ -36,7 +37,6 @@ namespace Pointer_tests {
 	}
 }
 
-
 int main()
 {
 	// setting utf-8 source code and execution is also required
@@ -47,11 +47,22 @@ int main()
 	Console::Style ok_style;
 	ok_style.foreground_color = { 0, 255, 0 };
 
-	// Test utf8_string
+	// Correctness
 	{
 		utf8_string_tests::testCorrectness();
+		JSON_tests::testCorrectness();
+		SparseVector_tests::testCorrectness();
+		Pointer_tests::testCorrectness();
 
-#if false 
+		Console::log("All correctness tests have passed.", ok_style);
+	}
+	
+	// Examples
+#if true
+	{
+		Console::resetFormatting();
+
+		// utf8_string
 		printf("\nExample 1 Creating a string \n");
 		utf8string_examples::example_1_Creating_a_string();
 		printf("\nExample 2 Acessing a character \n");
@@ -64,15 +75,16 @@ int main()
 		utf8string_examples::example_5_Modify();
 		printf("\nExample 6 Iteration \n");
 		utf8string_examples::example_6_Iteration();
-#endif		
+
+		// JSON
+		printf("\nJSON Examples \n");
+		JSON_examples::examples();
+
+		Console::log("All example tests have passed.", ok_style);
 	}
+#endif
 
-	JSON_tests::testCorrectness();
-	SparseVector_tests::testCorrectness();
-	Pointer_tests::testCorrectness();
-
-	Console::log("All correctness tests have passed.", ok_style);
-
+	// Performance
 #if false
 	JSON_tests::performance();
 	Console::log("All performance tests have passed.", ok_style);

@@ -11,6 +11,7 @@
     <ClInclude Include="Tests\JSON\JSON.hpp" />
     <ClInclude Include="Tests\utf8_string\utf8_string.hpp" />
     <ClInclude Include="Tests\SparseVector\SparseVector.hpp" />
+    <ClInclude Include="Examples\JSON.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Tests\JSON\read_test.json" />

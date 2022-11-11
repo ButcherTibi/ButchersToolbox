@@ -91,6 +91,7 @@
     <ClCompile Include="Tests\utf8_string\utf8_string.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Examples\JSON.hpp" />
     <ClInclude Include="Examples\utf8_string.hpp" />
     <ClInclude Include="Tests\JSON\JSON.hpp" />
     <ClInclude Include="Tests\SparseVector\SparseVector.hpp" />

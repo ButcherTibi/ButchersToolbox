@@ -66,19 +66,19 @@ void JSON_tests::testCorrectness()
 		// Read
 		json::Value& root_val = structure.getRoot();
 
-		auto& obj = structure.get<json::Object>(root_val);
+		auto& obj = json::getObject(root_val);
 
 		json::Value& field_1_val = structure.getValue(obj, "field_1");
-		double& field_1 = structure.get<double>(field_1_val);
+		double& field_1 = json::getNumber(field_1_val);
 
 		json::Value& field_2_val = structure.getValue(obj, 1);
-		json::Object& field_2 = structure.get<json::Object>(field_2_val);
+		json::Object& field_2 = json::getObject(field_2_val);
 
 		json::Value& field_3_val = structure.getValue(obj, 2);
-		json::Array& field_3 = structure.get<json::Array>(field_3_val);
+		json::Array& field_3 = json::getArray(field_3_val);
 
 		// Write
-		structure.add<nullptr_t>(field_3);
+		structure.addItem<nullptr_t>(field_3);
 
 		double& new_field = structure.addField<double>(obj, "new_field");
 		new_field = 1234;

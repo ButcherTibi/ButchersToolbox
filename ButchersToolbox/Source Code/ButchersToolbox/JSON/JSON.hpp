@@ -6,6 +6,12 @@
 #include <vector>
 
 
+/**
+ * @TODO: add support for comments by modifing the advance function and add a current context field
+ * to ignore `//` in string values.
+ * @TODO: remove repeated zeroes on number stringify starting from the end to the begining.
+*/
+
 namespace json {
 
 	const uint32_t invalid_index = 0xFFFF'FFFF;
@@ -13,10 +19,16 @@ namespace json {
 	typedef std::vector<uint32_t> Array;
 
 	struct Field {
+		/**
+		 * @brief Name of the field.
+		*/
 		std::string name;
-		uint32_t value;
+		/**
+		 * @brief Index to the value in Structure object.
+		 * Can be read using the getValue method in Structure.
+		*/
+		uint32_t value_idx;
 	};
-
 	typedef std::vector<Field> Object;
 
 	typedef std::variant<
@@ -27,6 +39,15 @@ namespace json {
 		Object,  // Object
 		nullptr_t  // null
 	> Value;
+
+
+	bool& getBool(Value& value);
+	double& getNumber(Value& value);
+	std::string& getString(Value& value);
+	Array& getArray(Value& value);
+	Object& getObject(Value& value);
+	nullptr_t& getNull(Value& value);
+
 
 	struct Error {
 		uint32_t line = 0xFFFF'FFFF;
@@ -41,6 +62,7 @@ namespace json {
 		uint32_t line;
 		uint32_t column;
 	};
+
 
 	class Structure {
 		std::vector<Value> values;
@@ -111,11 +133,14 @@ namespace json {
 		/// </summary>
 		Value& getRoot();
 
-		template<typename T>
-		T& get(Value& value);
+		/**
+		 * @brief Get value at index.
+		 * @param Index usually from a JSON Array or a field value from a JSON Object.
+		*/
+		Value& operator[](int);
 
 		/// <summary>
-		/// Get field value in JSON object base on field name
+		/// Get field value in JSON object based on field name
 		/// </summary>
 		/// <param name="object">= Object where the field is</param>
 		/// <param name="field_name">= Name of the field to find</param>
@@ -123,12 +148,19 @@ namespace json {
 		Value& getValue(Object& object, std::string field_name);
 
 		/// <summary>
-		/// Get field value in JSON object base on field index
+		/// Get field value in JSON object based on field index
 		/// </summary>
 		/// <param name="object">= Object where the field is</param>
 		/// <param name="field_index">= Index of the field in object</param>
 		/// <returns>Reference to found field value</returns>
 		Value& getValue(Object& object, uint32_t field_index);
+
+		/**
+		 * @brief Get item value from JSON array at index.
+		 * @param index = Index to access JSON array at.
+		 * @return Reference to found item.
+		*/
+		Value& getValue(Array& arr, uint32_t index);
 
 
 		/* Write */
@@ -139,7 +171,7 @@ namespace json {
 		/// <param name="array">= Array to add value to</param>
 		/// <returns>Reference to new element in array</returns>
 		template<typename T>
-		T& add(Array& array);
+		T& addItem(Array& array);
 
 		/// <summary>
 		/// Add a new field to JSON object

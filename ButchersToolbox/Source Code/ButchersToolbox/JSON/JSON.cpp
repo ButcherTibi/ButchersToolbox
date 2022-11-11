@@ -5,6 +5,37 @@ using namespace std::string_literals;
 using namespace json;
 
 
+bool& json::getBool(Value& value)
+{
+	return std::get<bool>(value);
+}
+
+double& json::getNumber(Value& value)
+{
+	return std::get<double>(value);
+}
+
+std::string& json::getString(Value& value)
+{
+	return std::get<std::string>(value);
+}
+
+Array& json::getArray(Value& value)
+{
+	return std::get<Array>(value);
+}
+
+Object& json::getObject(Value& value)
+{
+	return std::get<Object>(value);
+}
+
+nullptr_t& json::getNull(Value& value)
+{
+	return std::get<nullptr_t>(value);
+}
+
+
 char8_t Structure::getChar()
 {
 	return (*text)[pos.i];
@@ -214,8 +245,8 @@ uint32_t Structure::parseValue()
 			}
 
 			// Field value
-			new_field.value = parseValue();
-			if (new_field.value == invalid_index) {
+			new_field.value_idx = parseValue();
+			if (new_field.value_idx == invalid_index) {
 				return invalid_index;
 			}
 
@@ -482,7 +513,7 @@ void Structure::writeValue(uint32_t value_idx, uint32_t indentation, bool field_
 			writeSpace();
 
 			// Value
-			writeValue(field.value, indentation + 1, true);
+			writeValue(field.value_idx, indentation + 1, true);
 
 			// Next field
 			if (i < obj.size() - 1) {
@@ -578,55 +609,53 @@ Value& Structure::getRoot()
 	return values.front();
 }
 
-template<typename T>
-T& Structure::get(Value& value)
+Value& Structure::operator[](int index)
 {
-	return std::get<T>(value);
+	return values[index];
 }
-template bool&        Structure::get<bool>(Value& value);
-template double&      Structure::get<double>(Value& value);
-template std::string& Structure::get<std::string>(Value& value);
-template Array&       Structure::get<Array>(Value& value);
-template Object&      Structure::get<Object>(Value& value);
-template nullptr_t&   Structure::get<nullptr_t>(Value& value);
 
 Value& Structure::getValue(Object& object, std::string field_name)
 {
 	for (Field& field : object) {
 		if (field.name == field_name) {
-			return values[field.value];
+			return values[field.value_idx];
 		}
 	}
 
-	throw "field not found";
+	throw std::exception("field not found");
 }
 
 Value& Structure::getValue(Object& object, uint32_t field_index)
 {
-	uint32_t field_value = object[field_index].value;
+	uint32_t field_value = object[field_index].value_idx;
 	return values[field_value];
 }
 
+Value& Structure::getValue(Array& arr, uint32_t index)
+{
+	return values[arr[index]];
+}
+
 template<typename T>
-T& Structure::add(Array& array)
+T& Structure::addItem(Array& array)
 {
 	array.push_back((uint32_t)values.size());
 
 	return values.emplace_back().emplace<T>();
 }
-template bool&        Structure::add<bool>(Array& array);
-template double&      Structure::add<double>(Array& array);
-template std::string& Structure::add<std::string>(Array& array);
-template Array&       Structure::add<Array>(Array& array);
-template Object&      Structure::add<Object>(Array& array);
-template nullptr_t&   Structure::add<nullptr_t>(Array& array);
+template bool&        Structure::addItem<bool>(Array& array);
+template double&      Structure::addItem<double>(Array& array);
+template std::string& Structure::addItem<std::string>(Array& array);
+template Array&       Structure::addItem<Array>(Array& array);
+template Object&      Structure::addItem<Object>(Array& array);
+template nullptr_t&   Structure::addItem<nullptr_t>(Array& array);
 
 template<typename T>
 T& Structure::addField(Object& object, std::string field_name)
 {
 	Field& new_field = object.emplace_back();
 	new_field.name = field_name;
-	new_field.value = (uint32_t)values.size();
+	new_field.value_idx = (uint32_t)values.size();
 
 	return values.emplace_back().emplace<T>();
 }
