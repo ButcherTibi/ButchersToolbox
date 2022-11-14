@@ -1,11 +1,17 @@
-## UTF-8 C++20 String Library
+# UTF-8 C++20 String Library
 
 This is a simple, easy to use library for common string operations inspired by C# `System.String` class.
 
-> **WARNING**: To enable proper UTF-8 support for C++ programs in Visual Studio you must configure the console output to [utf-8](https://docs.microsoft.com/en-us/windows/console/setconsoleoutputcp) as well compiling with the [`/utf-8`](https://docs.microsoft.com/en-us/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8?view=msvc-170) flag.
+*This library is fully documented.*
+
+> **WARNING**
+> To enable proper UTF-8 support for C++ programs in Visual Studio you must configure the console output to [utf-8](https://docs.microsoft.com/en-us/windows/console/setconsoleoutputcp) as well compiling with the [`/utf-8`](https://docs.microsoft.com/en-us/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8?view=msvc-170) flag.
 > Failure to set the `/utf-8` will cause the 'ă' character to be displayed as 'a' and a warning to be emited in regards to the codepage of the source file.
 
-### Example 1 Creating a string
+# Examples
+
+## Example 1 Creating a string
+
 ```C++
 utf8_string str = u8"This is a UTF-8 encoded string";
 printf("%s \n", str.c_str());
@@ -21,7 +27,10 @@ utf8_string str_bytes = bytes;
 printf("%s \n", str_bytes.c_str());
 ```
 
-### Example 2 Accessing a character
+![](./RepoPage/Example_1.png)
+
+## Example 2 Accessing a character
+
 ```C++
 utf8_string str = u8"Cârnați";
 
@@ -36,7 +45,10 @@ printf("%s %s %s \n",
 );
 ```
 
-### Example 3 Comparison
+![](./RepoPage/Example_2.png)
+
+## Example 3 Comparison
+
 ```C++
 utf8_string soup = u8"Supă";
 utf8_string mayo = u8"Maioneză";
@@ -46,7 +58,10 @@ if (soup != mayo) {
 }
 ```
 
-### Example 4 Find
+![](./RepoPage/Example_3.png)
+
+## Example 4 Find
+
 ```C++
 utf8_string str = u8"Mămăliga se face cu mălai";
 utf8_string_iter found = str.find(u8"face");
@@ -57,7 +72,10 @@ printf("Does string start with 'Mămăliga' = %d \n", str.startsWith(u8"Mămăli
 printf("Does string end with 'mălai' = %d \n", str.endsWith(u8"mălai"));
 ```
 
-### Example 5 Modify
+![](./RepoPage/Example_4.png)
+
+## Example 5 Modify
+
 ```C++
 utf8_string str = u8"Ceafă de porc";
 str.push(u8" şi cartofi cu rozmarin");
@@ -72,7 +90,10 @@ str.erase(u8" cu rozmarin");
 printf("%s \n", str.c_str());
 ```
 
-### Example 6 Iteration
+![](./RepoPage/Example_5.png)
+
+## Example 6 Iteration
+
 ```C++
 utf8_string str = u8"La Vatra au niște șnițele bune\n";
 
@@ -84,3 +105,9 @@ for (auto iter = str.last(); iter != str.before(); iter--) {
     printf("%s", iter.get().c_str());  // not very efficient
 }
 ```
+
+![](./RepoPage/Example_6.png)
+
+# TODO
+
+- add language compatible iterator inside utf8_string

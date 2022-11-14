@@ -4,15 +4,15 @@ This is a simple library for parsing and writing JSON files (with pretty formati
 
 ***This library is fully documented***.
 
-# Content
+# Table of Contents
 - [JSON Library](#json-library)
-- [Content](#content)
-- [About](#about)
+- [Table of Contents](#table-of-contents)
+- [Design](#design)
 - [Examples](#examples)
   - [Parsing and reading values](#parsing-and-reading-values)
 - [TODO](#todo)
 
-# About
+# Design
 
 All JSON values are represented by `std::variant`.
 
@@ -82,6 +82,8 @@ for (auto& value_index : arr) {
     printf("  %s \n", json::getString(value).c_str());
 }
 ```
+
+![](./RepoPage/read_example.png)
 
 Begin by calling `json::Structure::parse` to parse the `std::string`, the function will return `false` if any errors are encountered. You can then read the `errors` field to find out the problem.
 

@@ -126,7 +126,6 @@ public:
 
 	/// <summary>
 	/// Gets a character a the specified BYTE index
-	/// <para>WARNING: this will always traverse the string from the begining</para>
 	/// </summary>
 	utf8_string at(uint32_t byte_index);
 
