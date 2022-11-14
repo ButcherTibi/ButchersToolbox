@@ -4,7 +4,7 @@ This is a simple, easy to use library for common string operations inspired by C
 
 *This library is fully documented.*
 
-> **WARNING**
+> **Warning**
 > To enable proper UTF-8 support for C++ programs in Visual Studio you must configure the console output to [utf-8](https://docs.microsoft.com/en-us/windows/console/setconsoleoutputcp) as well compiling with the [`/utf-8`](https://docs.microsoft.com/en-us/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8?view=msvc-170) flag.
 > Failure to set the `/utf-8` will cause the 'ă' character to be displayed as 'a' and a warning to be emited in regards to the codepage of the source file.
 
