@@ -65,9 +65,9 @@ namespace filesys {
 		string toString(T separator = '\\');
 
 		/**
-		 * @brief Return the full path to executabe of the application.
+		 * @brief Return the full path to executable of the application.
 		*/
-		static Path executablePath();
+		static Path pathToBinary();
 	};
 
 
@@ -159,7 +159,7 @@ namespace filesys {
 	}
 
 	template<typename T>
-	Path<T> Path<T>::executablePath()
+	Path<T> Path<T>::pathToBinary()
 	{
 		string exe_path;
 		exe_path.resize(max_path_length);

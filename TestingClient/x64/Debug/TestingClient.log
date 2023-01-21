@@ -1,4 +1,6 @@
-﻿  utf8_string.cpp
+﻿  JSON.cpp
   main.cpp
+  SparseVector.cpp
+  utf8_string.cpp
   Generating Code...
-  TestingClient.vcxproj -> G:\MyWork\ButchersToolbox\x64\Debug\TestingClient.exe
+  TestingClient.vcxproj -> G:\My Work șță\ButchersToolbox\x64\Debug\TestingClient.exe

@@ -96,26 +96,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Source Code\ButchersToolbox\Console\Console.hpp" />
-    <ClInclude Include="Source Code\ButchersToolbox\DebugUtils.hpp" />
-    <ClInclude Include="Source Code\ButchersToolbox\Filesys\Filesys.hpp" />
-    <ClInclude Include="Source Code\ButchersToolbox\JSON\JSON.hpp" />
-    <ClInclude Include="Source Code\ButchersToolbox\SparseVector.hpp" />
-    <ClInclude Include="Source Code\ButchersToolbox\Pointer\Pointers.hpp" />
-    <ClInclude Include="Source Code\ButchersToolbox\utf8_string\utf8_string.hpp" />
-    <ClInclude Include="Source Code\ButchersToolbox\Windows\WindowsSpecific.hpp" />
+    <ClInclude Include="Include\ButchersToolbox\Console\Console.hpp" />
+    <ClInclude Include="Include\ButchersToolbox\DebugUtils.hpp" />
+    <ClInclude Include="Include\ButchersToolbox\Filesys\Filesys.hpp" />
+    <ClInclude Include="Include\ButchersToolbox\JSON\JSON.hpp" />
+    <ClInclude Include="Include\ButchersToolbox\SparseVector.hpp" />
+    <ClInclude Include="Include\ButchersToolbox\Pointer\Pointers.hpp" />
+    <ClInclude Include="Include\ButchersToolbox\utf8_string\utf8_string.hpp" />
+    <ClInclude Include="Include\ButchersToolbox\Windows\WindowsSpecific.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source Code\ButchersToolbox\Console\Console.cpp" />
-    <ClCompile Include="Source Code\ButchersToolbox\Filesys\Filesys.cpp" />
-    <ClCompile Include="Source Code\ButchersToolbox\JSON\JSON.cpp" />
-    <ClCompile Include="Source Code\ButchersToolbox\Pointer\Pointers.cpp" />
-    <ClCompile Include="Source Code\ButchersToolbox\utf8_string\utf8_string.cpp" />
-    <ClCompile Include="Source Code\ButchersToolbox\Windows\WindowsSpecific.cpp" />
+    <ClCompile Include="Include\ButchersToolbox\Console\Console.cpp" />
+    <ClCompile Include="Include\ButchersToolbox\Filesys\Filesys.cpp" />
+    <ClCompile Include="Include\ButchersToolbox\JSON\JSON.cpp" />
+    <ClCompile Include="Include\ButchersToolbox\Pointer\Pointers.cpp" />
+    <ClCompile Include="Include\ButchersToolbox\utf8_string\utf8_string.cpp" />
+    <ClCompile Include="Include\ButchersToolbox\Windows\WindowsSpecific.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Source Code\ButchersToolbox\JSON\README.md" />
-    <None Include="Source Code\ButchersToolbox\utf8_string\README.md" />
+    <None Include="Include\ButchersToolbox\JSON\README.md" />
+    <None Include="Include\ButchersToolbox\utf8_string\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

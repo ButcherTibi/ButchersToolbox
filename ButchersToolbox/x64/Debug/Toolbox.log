@@ -1,2 +1,8 @@
-﻿  utf8_string.cpp
-  Toolbox.vcxproj -> G:\MyWork\ButchersToolbox\ButchersToolbox\Library\x64\Debug\ButchersToolbox.lib
+﻿  Console.cpp
+  Filesys.cpp
+  JSON.cpp
+  Pointers.cpp
+  utf8_string.cpp
+  WindowsSpecific.cpp
+  Generating Code...
+  Toolbox.vcxproj -> G:\My Work șță\ButchersToolbox\ButchersToolbox\Library\x64\Debug\ButchersToolbox.lib
